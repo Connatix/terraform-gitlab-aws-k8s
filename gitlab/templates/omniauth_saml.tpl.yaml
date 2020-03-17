@@ -1,0 +1,8 @@
+name: "saml"
+
+args:
+  assertion_consumer_service_url: "https://${name}.${domain}/users/auth/saml/callback"
+  idp_cert_fingerprint: "${idp_cert_fingerprint}"
+  idp_sso_target_url: "${idp_sso_target_url}"
+  issuer: "https://${name}.${domain}"
+  name_identifier_format: "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
