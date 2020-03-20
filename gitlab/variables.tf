@@ -25,8 +25,8 @@ variable "license_key" {
   type = string
 }
 
-variable "vpc_security_group_ids" {
-  type = list(string)
+variable "eks_wokers_security_group_id" {
+  type = string
 }
 
 variable "redis_subnet_ids" {

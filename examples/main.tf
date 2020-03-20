@@ -101,7 +101,6 @@ module "gitlab" {
 
   license_key              = file("license.key")
   domain                   = "yourdomain.com"
-  vpc_security_group_ids   = [module.vpc.default_security_group_id]
   rds_subnet_ids           = module.vpc.private_subnets
   redis_subnet_ids         = module.vpc.private_subnets
   certmanager_issuer_email = "admin@yourdomain.com"
@@ -109,4 +108,5 @@ module "gitlab" {
   omniauth_enabled   = true
   idp_fingerprint    = "AA:BB:CC:DD:EE:FF:FF:EE:DD:CC:BB:AA"
   idp_sso_target_url = "https://accounts.google.com/o/saml2/idp?idpid=X"
+  eks_wokers_security_group_id = module.vpc.default_security_group_id
 }

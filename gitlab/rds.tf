@@ -1,3 +1,14 @@
+resource "aws_security_group" "gitlab-rds" {
+  name_prefix = "gitlab-rds"
+
+  ingress {
+    security_groups = var.eks_wokers_security_group_id
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+  }
+}
+
 module "db" {
   source  = "terraform-aws-modules/rds/aws"
   version = "2.14.0"
@@ -22,7 +33,7 @@ module "db" {
   password                            = random_password.rds_password.result
 
   publicly_accessible    = false
-  vpc_security_group_ids = var.vpc_security_group_ids
+  vpc_security_group_ids = [aws_security_group.gitlab-rds.id]
 
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"
