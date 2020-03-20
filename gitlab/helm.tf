@@ -146,8 +146,9 @@ locals {
 
   # Nginx
   helm_nginx_internal_sets = {
-    "gitlab.nginx.controller.service.annotations.service.beta.kubernetes.io/aws-load-balancer-internal" = "true"
+    "gitlab.nginx.controller.service.annotations.service.beta\\.kubernetes\\.io/aws-load-balancer-internal'" = "true"
   }
+
   //  helm_smtp_sets = {
   //    enabled: false
   //    address: smtp.mailgun.org
