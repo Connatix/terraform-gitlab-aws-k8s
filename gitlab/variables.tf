@@ -70,3 +70,8 @@ variable "gitaly_storage_size_gigabytes" {
   type    = number
   default = 200
 }
+
+variable "use_internal_ingress" {
+  type    = bool
+  default = false
+}

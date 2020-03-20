@@ -113,4 +113,5 @@ module "gitlab" {
     key   = "youdomain.com/app"
     value = "gitlab"
   }]
+  use_internal_ingress = true
 }

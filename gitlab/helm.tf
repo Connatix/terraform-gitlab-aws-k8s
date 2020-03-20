@@ -140,6 +140,10 @@ locals {
     "providers[0].key"           = local.omniauth_provider_kubernetes_secret_key
   }
 
+  # Nginx
+  helm_nginx_internal_sets = {
+    "gitlab.nginx.controller.service.annotations.service.beta.kubernetes.io/aws-load-balancer-internal" = "true"
+  }
   //  helm_smtp_sets = {
   //    enabled: false
   //    address: smtp.mailgun.org
@@ -226,6 +230,14 @@ resource "helm_release" "gitlab" {
 
   dynamic "set" {
     for_each = length(var.k8s_toleration_label) != 0 ? local.helm_toleration_sets : {}
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.use_internal_ingress ? local.helm_nginx_internal_sets : {}
     content {
       name  = set.key
       value = set.value
