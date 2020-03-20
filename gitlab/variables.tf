@@ -56,3 +56,8 @@ variable "idp_sso_target_url" {
 variable "certmanager_issuer_email" {
   type = string
 }
+
+variable "k8s_toleration_label" {
+  type    = string
+  default = ""
+}

@@ -38,6 +38,16 @@ locals {
     "prometheus.server.enabled" = "false"
   }
 
+  helm_toleration_sets = {
+    "gitlab.gitaly.tolerations[0]"          = var.k8s_toleration_label
+    "gitlab.gitlab-exporter.tolerations[0]" = var.k8s_toleration_label
+    "gitlab.gitlab-runner.tolerations[0]"   = var.k8s_toleration_label
+    "gitlab.gitlab-shell.tolerations[0]"    = var.k8s_toleration_label
+    "gitlab.migrations.tolerations[0]"      = var.k8s_toleration_label
+    "gitlab.sidekiq.tolerations[0]"         = var.k8s_toleration_label
+    "gitlab.unicorn.tolerations[0]"         = var.k8s_toleration_label
+  }
+
   # External Database
   # According to https://docs.gitlab.com/charts/advanced/external-db/
   helm_psql_sets = {
@@ -143,7 +153,7 @@ resource "helm_release" "gitlab" {
   name       = var.name
   namespace  = kubernetes_namespace.gitlab.metadata[0].name
   repository = data.helm_repository.gitlab.metadata[0].name
-  version = local.chart_version
+  version    = local.chart_version
 
   dynamic "set" {
     for_each = local.helm_gitlab_sets
@@ -189,6 +199,14 @@ resource "helm_release" "gitlab" {
     for_each = local.helm_cron_backup_sets
     content {
       name  = "gitlab.task-runner.backups.cron.${set.key}"
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.k8s_toleration_label != "" ? local.helm_toleration_sets : {}
+    content {
+      name  = set.key
       value = set.value
     }
   }
