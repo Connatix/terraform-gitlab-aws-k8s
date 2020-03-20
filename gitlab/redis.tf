@@ -14,7 +14,7 @@ module "redis" {
   name                       = var.name
   vpc_id                     = data.aws_subnet.redis_subnet.0.vpc_id
   availability_zones         = toset(data.aws_subnet.redis_subnet.*.availability_zone)
-  subnets                    = toset(var.redis_subnet_ids)
+  subnets                    = toset(data.aws_subnet.redis_subnet.*.id)
   allowed_security_groups    = [var.eks_wokers_security_group_id]
   instance_type              = var.redis_instance_type
   family                     = "redis5.0"

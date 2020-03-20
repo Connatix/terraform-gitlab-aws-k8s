@@ -1,5 +1,11 @@
+data "aws_subnet" "rds_subnet" {
+  count = max(length(var.rds_subnet_ids), 2)
+  id    = var.rds_subnet_ids[count.index]
+}
+
 resource "aws_security_group" "gitlab-rds" {
   name_prefix = "gitlab-rds"
+  vpc_id      = data.aws_subnet.rds_subnet.0.vpc_id
 
   ingress {
     security_groups = toset([var.eks_wokers_security_group_id])
@@ -45,7 +51,7 @@ module "db" {
   "upgrade"]
 
   # DB subnet group
-  subnet_ids = var.rds_subnet_ids
+  subnet_ids = data.aws_subnet.rds_subnet.*.id
 
   # Snapshot name upon DB deletion
   final_snapshot_identifier = var.name
