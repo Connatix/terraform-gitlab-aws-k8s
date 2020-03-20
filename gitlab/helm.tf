@@ -67,6 +67,10 @@ locals {
     "gitlab.unicorn.tolerations[0].key"    = var.k8s_toleration_label.0.key
     "gitlab.unicorn.tolerations[0].value"  = var.k8s_toleration_label.0.value
     "gitlab.unicorn.tolerations[0].effect" = "NoSchedule"
+
+    "shared-secrets.tolerations[0].key"    = var.k8s_toleration_label.0.key
+    "shared-secrets.tolerations[0].value"  = var.k8s_toleration_label.0.value
+    "shared-secrets.tolerations[0].effect" = "NoSchedule"
   }
 
   # External Database
