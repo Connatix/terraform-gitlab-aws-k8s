@@ -8,18 +8,17 @@ resource "aws_security_group" "gitlab-rds" {
   vpc_id      = data.aws_subnet.rds_subnet.0.vpc_id
 
   ingress {
-    from_port = 5432
-    to_port   = 5432
-    protocol  = "tcp"
-    //    security_groups = toset([var.eks_wokers_security_group_id])
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = toset([var.eks_wokers_security_group_id])
   }
 
   egress {
-    from_port = 0
-    protocol  = "tcp"
-    to_port   = 0
-    //    security_groups = toset([var.eks_wokers_security_group_id])
+    from_port       = 0
+    protocol        = "tcp"
+    to_port         = 0
+    security_groups = toset([var.eks_wokers_security_group_id])
   }
 }
 
