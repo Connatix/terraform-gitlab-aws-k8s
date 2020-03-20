@@ -2,7 +2,7 @@ resource "aws_security_group" "gitlab-rds" {
   name_prefix = "gitlab-rds"
 
   ingress {
-    security_groups = var.eks_wokers_security_group_id
+    security_groups = toset([var.eks_wokers_security_group_id])
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
