@@ -109,4 +109,8 @@ module "gitlab" {
   idp_fingerprint              = "AA:BB:CC:DD:EE:FF:FF:EE:DD:CC:BB:AA"
   idp_sso_target_url           = "https://accounts.google.com/o/saml2/idp?idpid=X"
   eks_wokers_security_group_id = module.vpc.default_security_group_id
+  k8s_toleration_label = [{
+    key   = "youdomain.com/app"
+    value = "gitlab"
+  }]
 }

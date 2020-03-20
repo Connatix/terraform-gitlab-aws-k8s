@@ -58,11 +58,15 @@ variable "certmanager_issuer_email" {
 }
 
 variable "k8s_toleration_label" {
-  type    = string
-  default = ""
+  type = list(object({
+    key : string,
+    value : string
+  }))
+
+  default = []
 }
 
 variable "gitaly_storage_size_gigabytes" {
-  type = number
+  type    = number
   default = 200
 }

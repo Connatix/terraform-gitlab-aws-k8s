@@ -29,7 +29,7 @@ locals {
     # Gitaly
     # According to https://docs.gitlab.com/charts/charts/globals.html#internal
     "gitlab.gitaly.persistence.storageClass" = kubernetes_storage_class.gitaly_storage_class.metadata[0].name
-    "gitlab.gitaly.persistence.size" = "${var.gitaly_storage_size_gigabytes}Gi"
+    "gitlab.gitaly.persistence.size"         = "${var.gitaly_storage_size_gigabytes}Gi"
 
     # Misc
     "global.appConfig.defaultCanCreateGroup"   = "false"
@@ -40,13 +40,33 @@ locals {
   }
 
   helm_toleration_sets = {
-    "gitlab.gitaly.tolerations[0]"          = var.k8s_toleration_label
-    "gitlab.gitlab-exporter.tolerations[0]" = var.k8s_toleration_label
-    "gitlab.gitlab-runner.tolerations[0]"   = var.k8s_toleration_label
-    "gitlab.gitlab-shell.tolerations[0]"    = var.k8s_toleration_label
-    "gitlab.migrations.tolerations[0]"      = var.k8s_toleration_label
-    "gitlab.sidekiq.tolerations[0]"         = var.k8s_toleration_label
-    "gitlab.unicorn.tolerations[0]"         = var.k8s_toleration_label
+    "gitlab.gitaly.tolerations[0].key"    = var.k8s_toleration_label.0.key
+    "gitlab.gitaly.tolerations[0].value"  = var.k8s_toleration_label.0.value
+    "gitlab.gitaly.tolerations[0].effect" = "NoSchedule"
+
+    "gitlab.gitlab-exporter.tolerations[0].key"    = var.k8s_toleration_label.0.key
+    "gitlab.gitlab-exporter.tolerations[0].value"  = var.k8s_toleration_label.0.value
+    "gitlab.gitlab-exporter.tolerations[0].effect" = "NoSchedule"
+
+    "gitlab.gitlab-runner.tolerations[0].key"    = var.k8s_toleration_label.0.key
+    "gitlab.gitlab-runner.tolerations[0].value"  = var.k8s_toleration_label.0.value
+    "gitlab.gitlab-runner.tolerations[0].effect" = "NoSchedule"
+
+    "gitlab.gitlab-shell.tolerations[0].key"    = var.k8s_toleration_label.0.key
+    "gitlab.gitlab-shell.tolerations[0].value"  = var.k8s_toleration_label.0.value
+    "gitlab.gitlab-shell.tolerations[0].effect" = "NoSchedule"
+
+    "gitlab.migrations.tolerations[0].key"    = var.k8s_toleration_label.0.key
+    "gitlab.migrations.tolerations[0].value"  = var.k8s_toleration_label.0.value
+    "gitlab.migrations.tolerations[0].effect" = "NoSchedule"
+
+    "gitlab.sidekiq.tolerations[0].key"    = var.k8s_toleration_label.0.key
+    "gitlab.sidekiq.tolerations[0].value"  = var.k8s_toleration_label.0.value
+    "gitlab.sidekiq.tolerations[0].effect" = "NoSchedule"
+
+    "gitlab.unicorn.tolerations[0].key"    = var.k8s_toleration_label.0.key
+    "gitlab.unicorn.tolerations[0].value"  = var.k8s_toleration_label.0.value
+    "gitlab.unicorn.tolerations[0].effect" = "NoSchedule"
   }
 
   # External Database
@@ -205,7 +225,7 @@ resource "helm_release" "gitlab" {
   }
 
   dynamic "set" {
-    for_each = var.k8s_toleration_label != "" ? local.helm_toleration_sets : {}
+    for_each = length(var.k8s_toleration_label) != 0 ? local.helm_toleration_sets : {}
     content {
       name  = set.key
       value = set.value
