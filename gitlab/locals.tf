@@ -13,6 +13,6 @@ locals {
   omniauth_provider_kubernetes_secret_key       = "provider"
 
   use_external_postgres     = true
-  use_external_redis        = true
+  use_external_redis        = false
   use_external_object_store = true
 }
