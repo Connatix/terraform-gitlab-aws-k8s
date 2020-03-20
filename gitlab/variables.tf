@@ -61,3 +61,8 @@ variable "k8s_toleration_label" {
   type    = string
   default = ""
 }
+
+variable "gitaly_storage_size_gigabytes" {
+  type = number
+  default = 200
+}

@@ -29,6 +29,7 @@ locals {
     # Gitaly
     # According to https://docs.gitlab.com/charts/charts/globals.html#internal
     "gitlab.gitaly.persistence.storageClass" = kubernetes_storage_class.gitaly_storage_class.metadata[0].name
+    "gitlab.gitaly.persistence.size" = "${var.gitaly_storage_size_gigabytes}Gi"
 
     # Misc
     "global.appConfig.defaultCanCreateGroup"   = "false"
