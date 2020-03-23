@@ -23,7 +23,6 @@ resource "aws_s3_bucket" "bucket" {
     rule {
       apply_server_side_encryption_by_default {
         sse_algorithm = "aws:kms"
-        //        kms_master_key_id = aws_kms_key.key.arn
       }
     }
   }
@@ -37,6 +36,10 @@ resource "aws_iam_policy" "s3-buckets-policy" {
     {
       "Effect": "Allow",
       "Action": [
+        "s3:GetBucketLocation",
+        "s3:ListBucketMultipartUploads",
+        "s3:ListMultipartUploadParts",
+        "s3:AbortMultipartUpload",
         "s3:ListBucket",
         "s3:PutObject",
         "s3:GetObject",
