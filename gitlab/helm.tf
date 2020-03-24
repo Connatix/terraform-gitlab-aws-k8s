@@ -172,10 +172,6 @@ locals {
   }
 
   helm_gitlab_runner_toleration_sets = {
-    "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key"       = var.ci_k8s_toleration_label.0.key
-    "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].operator"  = "In"
-    "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].values[0]" = var.ci_k8s_toleration_label.0.value
-
     "tolerations[0].key"    = var.ci_k8s_toleration_label.0.key
     "tolerations[0].value"  = var.ci_k8s_toleration_label.0.value
     "tolerations[0].effect" = "NoSchedule"
