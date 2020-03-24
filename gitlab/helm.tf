@@ -170,6 +170,16 @@ locals {
     "schedule"  = "0 12 * * *"
     "extraArgs" = local.use_external_postgres ? "--skip db" : ""
   }
+
+  helm_gitlab_runner_toleration_sets = {
+    "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key"       = var.ci_k8s_toleration_label.0.key
+    "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].operator"  = "In"
+    "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].values[0]" = var.ci_k8s_toleration_label.0.value
+
+    "tolerations[0].key"    = var.ci_k8s_toleration_label.0.key
+    "tolerations[0].value"  = var.ci_k8s_toleration_label.0.value
+    "tolerations[0].effect" = "NoSchedule"
+  }
 }
 
 data "helm_repository" "gitlab" {
@@ -245,6 +255,14 @@ resource "helm_release" "gitlab" {
     for_each = var.use_internal_ingress ? local.helm_nginx_internal_sets : {}
     content {
       name  = set.key
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = length(var.ci_k8s_toleration_label) != 0 ? local.helm_gitlab_runner_toleration_sets : {}
+    content {
+      name  = "gitlab-runner.${set.key}"
       value = set.value
     }
   }
