@@ -66,6 +66,15 @@ variable "k8s_toleration_label" {
   default = []
 }
 
+variable "ci_k8s_toleration_label" {
+  type = list(object({
+    key : string,
+    value : string
+  }))
+
+  default = []
+}
+
 variable "gitaly_storage_size_gigabytes" {
   type    = number
   default = 200
