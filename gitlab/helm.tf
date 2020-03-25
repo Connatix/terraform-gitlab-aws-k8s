@@ -43,42 +43,42 @@ locals {
     "gitlab.gitaly.tolerations[0].key"    = var.k8s_toleration_label.0.key
     "gitlab.gitaly.tolerations[0].value"  = var.k8s_toleration_label.0.value
     "gitlab.gitaly.tolerations[0].effect" = "NoSchedule"
-    "gitlab.gitaly.nodeSelector[0]" = "${var.k8s_toleration_label.0.key}=${var.k8s_toleration_label.0.value}"
+    "gitlab.gitaly.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
 
     "gitlab.gitlab-exporter.tolerations[0].key"    = var.k8s_toleration_label.0.key
     "gitlab.gitlab-exporter.tolerations[0].value"  = var.k8s_toleration_label.0.value
     "gitlab.gitlab-exporter.tolerations[0].effect" = "NoSchedule"
-    "gitlab.gitlab-exporter.nodeSelector[0]" = "${var.k8s_toleration_label.0.key}=${var.k8s_toleration_label.0.value}"
+    "gitlab.gitlab-exporter.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
 
     "gitlab.gitlab-runner.tolerations[0].key"    = var.k8s_toleration_label.0.key
     "gitlab.gitlab-runner.tolerations[0].value"  = var.k8s_toleration_label.0.value
     "gitlab.gitlab-runner.tolerations[0].effect" = "NoSchedule"
-    "gitlab.gitlab-runner.nodeSelector[0]" = "${var.k8s_toleration_label.0.key}=${var.k8s_toleration_label.0.value}"
+    "gitlab.gitlab-runner.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
 
     "gitlab.gitlab-shell.tolerations[0].key"    = var.k8s_toleration_label.0.key
     "gitlab.gitlab-shell.tolerations[0].value"  = var.k8s_toleration_label.0.value
     "gitlab.gitlab-shell.tolerations[0].effect" = "NoSchedule"
-    "gitlab.gitlab-shell.nodeSelector[0]" = "${var.k8s_toleration_label.0.key}=${var.k8s_toleration_label.0.value}"
+    "gitlab.gitlab-shell.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
 
     "gitlab.migrations.tolerations[0].key"    = var.k8s_toleration_label.0.key
     "gitlab.migrations.tolerations[0].value"  = var.k8s_toleration_label.0.value
     "gitlab.migrations.tolerations[0].effect" = "NoSchedule"
-    "gitlab.migrations.nodeSelector[0]" = "${var.k8s_toleration_label.0.key}=${var.k8s_toleration_label.0.value}"
+    "gitlab.migrations.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
 
     "gitlab.sidekiq.tolerations[0].key"    = var.k8s_toleration_label.0.key
     "gitlab.sidekiq.tolerations[0].value"  = var.k8s_toleration_label.0.value
     "gitlab.sidekiq.tolerations[0].effect" = "NoSchedule"
-    "gitlab.sidekiq.nodeSelector[0]" = "${var.k8s_toleration_label.0.key}=${var.k8s_toleration_label.0.value}"
+    "gitlab.sidekiq.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
 
     "gitlab.unicorn.tolerations[0].key"    = var.k8s_toleration_label.0.key
     "gitlab.unicorn.tolerations[0].value"  = var.k8s_toleration_label.0.value
     "gitlab.unicorn.tolerations[0].effect" = "NoSchedule"
-    "gitlab.unicorn.nodeSelector[0]" = "${var.k8s_toleration_label.0.key}=${var.k8s_toleration_label.0.value}"
+    "gitlab.unicorn.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
 
     "shared-secrets.tolerations[0].key"    = var.k8s_toleration_label.0.key
     "shared-secrets.tolerations[0].value"  = var.k8s_toleration_label.0.value
     "shared-secrets.tolerations[0].effect" = "NoSchedule"
-    "shared-secrets.nodeSelector[0]" = "${var.k8s_toleration_label.0.key}=${var.k8s_toleration_label.0.value}"
+    "shared-secrets.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
   }
 
   # External Database
@@ -183,7 +183,7 @@ locals {
     "tolerations[0].key"    = var.ci_k8s_toleration_label.0.key
     "tolerations[0].value"  = var.ci_k8s_toleration_label.0.value
     "tolerations[0].effect" = "NoSchedule"
-    "nodeSelector[0]" = "${var.ci_k8s_toleration_label.0.key}=${var.ci_k8s_toleration_label.0.value}"
+    "nodeSelector.${replace(var.ci_k8s_toleration_label.0.key, ".", "\\.")}" = var.ci_k8s_toleration_label[0].value
   }
 }
 
