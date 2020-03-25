@@ -84,6 +84,11 @@ locals {
     "nginx-ingress.controller.tolerations[0].value"                                                = var.k8s_toleration_label.0.value
     "nginx-ingress.controller.tolerations[0].effect"                                               = "NoSchedule"
     "nginx-ingress.controller.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
+
+    "registry.tolerations[0].key"                                                  = var.k8s_toleration_label.0.key
+    "registry.tolerations[0].value"                                                = var.k8s_toleration_label.0.value
+    "registry.tolerations[0].effect"                                               = "NoSchedule"
+    "registry.nodeSelector.${replace(var.k8s_toleration_label.0.key, ".", "\\.")}" = var.k8s_toleration_label[0].value
   }
 
   # External Database
