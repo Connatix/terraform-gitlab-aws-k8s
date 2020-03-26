@@ -112,3 +112,16 @@ resource "kubernetes_secret" "gitlab_omniauth_provider_saml" {
     })
   }
 }
+
+
+resource "kubernetes_secret" "gitlab_smtp" {
+  count = length(var.smtp_config) > 0 ? 1 : 0
+  metadata {
+    namespace = kubernetes_namespace.gitlab.metadata[0].name
+    name      = "${var.name}-smtp-password"
+  }
+
+  data = {
+    "${local.smtp_kubernetes_secret_key}" = aws_iam_access_key.gitlab.secret
+  }
+}

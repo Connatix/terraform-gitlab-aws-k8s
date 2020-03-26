@@ -75,6 +75,18 @@ variable "ci_k8s_toleration_label" {
   default = []
 }
 
+variable "smtp_config" {
+  type = list(object({
+    address : string,
+    port : number,
+    domain : string,
+    authentication : string,
+    starttls_auto : string,
+    openssl_verify_mode : string
+  }))
+  default = []
+}
+
 variable "gitaly_storage_size_gigabytes" {
   type    = number
   default = 200

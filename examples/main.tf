@@ -56,10 +56,19 @@ module "vpc" {
   name = var.name
   cidr = "172.69.0.0/16"
 
-  azs = ["us-east-2a", "us-east-2b", "us-east-2c"]
+  azs = [
+    "us-east-2a",
+    "us-east-2b",
+  "us-east-2c"]
 
-  private_subnets = ["172.69.0.0/24", "172.69.1.0/24", "172.69.2.0/24"]
-  public_subnets  = ["172.69.3.0/24", "172.69.4.0/24", "172.69.5.0/24"]
+  private_subnets = [
+    "172.69.0.0/24",
+    "172.69.1.0/24",
+  "172.69.2.0/24"]
+  public_subnets = [
+    "172.69.3.0/24",
+    "172.69.4.0/24",
+  "172.69.5.0/24"]
 
   enable_nat_gateway   = true
   enable_dns_hostnames = true
@@ -109,9 +118,26 @@ module "gitlab" {
   idp_fingerprint              = "AA:BB:CC:DD:EE:FF:FF:EE:DD:CC:BB:AA"
   idp_sso_target_url           = "https://accounts.google.com/o/saml2/idp?idpid=X"
   eks_wokers_security_group_id = module.vpc.default_security_group_id
-  k8s_toleration_label = [{
-    key   = "youdomain.com/app"
-    value = "gitlab"
+  use_internal_ingress         = true
+
+  k8s_toleration_label = [
+    {
+      key   = "youdomain.com/app"
+      value = "gitlab"
   }]
-  use_internal_ingress = true
+  ci_k8s_toleration_label = [
+    {
+      key   = "youdomain.com/app"
+      value = "gitlab-ci"
+  }]
+  smtp_config = [
+    {
+      address = "email-smtp.region-1.amazonaws.com",
+      port : 587,
+      domain : "yourdomain.com",
+      authentication : "login",
+      starttls_auto : "true",
+      openssl_verify_mode : ""
+  }]
+
 }

@@ -11,6 +11,7 @@ locals {
   license_kubernetes_secret_key                 = "license"
   object_store_connection_kubernetes_secret_key = "connection"
   omniauth_provider_kubernetes_secret_key       = "provider"
+  smtp_kubernetes_secret_key                    = "smtp-password"
 
   use_external_postgres     = true
   use_external_redis        = false
