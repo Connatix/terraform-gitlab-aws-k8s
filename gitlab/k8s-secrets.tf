@@ -122,6 +122,6 @@ resource "kubernetes_secret" "gitlab_smtp" {
   }
 
   data = {
-    "${local.smtp_kubernetes_secret_key}" = aws_iam_access_key.gitlab.secret
+    "${local.smtp_kubernetes_secret_key}" = var.smtp_config.0.password
   }
 }

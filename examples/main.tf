@@ -132,11 +132,13 @@ module "gitlab" {
   }]
   smtp_config = [
     {
-      address = "email-smtp.region-1.amazonaws.com",
-      port : 587,
-      domain : "yourdomain.com",
-      authentication : "login",
-      starttls_auto : "true",
+      address   = "email-smtp.region-1.amazonaws.com"
+      port      = 587
+      user_name = "user"
+      password  = "p@ssword"
+      domain : "yourdomain.com"
+      authentication : "login"
+      starttls_auto : "true"
       openssl_verify_mode : ""
   }]
 

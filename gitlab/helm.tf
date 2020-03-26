@@ -171,7 +171,7 @@ locals {
     "enabled"             = true
     "address"             = var.smtp_config.0.address
     "port"                = var.smtp_config.0.port
-    "user_name"           = aws_iam_access_key.gitlab.id
+    "user_name"           = var.smtp_config.0.user_name
     "password.secret"     = kubernetes_secret.gitlab_smtp[0].metadata[0].name
     "password.key"        = local.smtp_kubernetes_secret_key
     "domain"              = var.smtp_config.0.domain

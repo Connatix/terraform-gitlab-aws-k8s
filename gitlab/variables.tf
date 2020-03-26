@@ -79,6 +79,8 @@ variable "smtp_config" {
   type = list(object({
     address : string,
     port : number,
+    user_name : string,
+    password : string,
     domain : string,
     authentication : string,
     starttls_auto : string,
