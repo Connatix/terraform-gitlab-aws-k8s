@@ -167,20 +167,23 @@ locals {
     "nginx-ingress.controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-internal" = "true"
   }
 
-  //  helm_smtp_sets = {
-  //    enabled: false
-  //    address: smtp.mailgun.org
-  //    port: 2525
-  //    user_name: ""
-  //    ## doc/installation/secrets.md#smtp-password
-  //    password:
-  //    secret: ""
-  //    key: password
-  //    # domain:
-  //    authentication: "plain"
-  //    starttls_auto: false
-  //    openssl_verify_mode: "peer"
-  //  }
+  helm_smtp_sets = {
+    "enabled"             = true
+    "address"             = var.smtp_config.0.address
+    "port"                = var.smtp_config.0.port
+    "user_name"           = var.smtp_config.0.user_name
+    "password.secret"     = kubernetes_secret.gitlab_smtp[0].metadata[0].name
+    "password.key"        = local.smtp_kubernetes_secret_key
+    "domain"              = var.smtp_config.0.domain
+    "authentication"      = var.smtp_config.0.authentication
+    "starttls_auto"       = var.smtp_config.0.starttls_auto
+    "openssl_verify_mode" = var.smtp_config.0.openssl_verify_mode
+  }
+
+  helm_email_sets = {
+    "from"         = "gitlab@${var.smtp_config.0.domain}"
+    "display_name" = "GitLab"
+  }
 
   helm_cron_backup_sets = {
     # Backups
@@ -278,6 +281,14 @@ resource "helm_release" "gitlab" {
     for_each = length(var.ci_k8s_toleration_label) != 0 ? local.helm_gitlab_runner_toleration_sets : {}
     content {
       name  = "gitlab-runner.${set.key}"
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = length(var.smtp_config) > 0 ? local.helm_smtp_sets : {}
+    content {
+      name  = "global.smtp.${set.key}"
       value = set.value
     }
   }
