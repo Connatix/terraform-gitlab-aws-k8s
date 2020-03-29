@@ -23,7 +23,7 @@ resource "aws_s3_bucket" "bucket" {
   bucket_prefix = each.value
 
   dynamic "server_side_encryption_configuration" {
-    for_each = contains(local.s3_buckets_kms_disable, each.key) ? [] : [each.value]
+    for_each = contains(local.s3_buckets_kms_disable, each.value) ? [] : [each.value]
 
     content {
       rule {
