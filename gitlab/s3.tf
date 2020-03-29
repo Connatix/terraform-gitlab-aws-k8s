@@ -9,6 +9,7 @@ locals {
     "tmp"           = "tmp"
     "externalDiffs" = "externaldiffs"
     "pseudonymizer" = "pseudonymizer"
+    "cache"         = "cache"
   }
 
   s3_buckets = toset(formatlist("%s-%s-%s", var.name, replace(var.domain, ".", "-"), values(local.s3_bucket_fragments)))

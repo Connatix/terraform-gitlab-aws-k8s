@@ -192,6 +192,18 @@ locals {
     "extraArgs" = local.use_external_postgres ? "--skip db" : ""
   }
 
+  helm_gitlab_runner_sets = {
+    "runners.cache.cacheType"   = "s3"
+    "runners.cache.cachePath"   = "gitlab_runner"
+    "runners.cache.cacheShared" = "true"
+
+    "runners.cache.s3ServerAddress"  = "s3.amazonaws.com"
+    "runners.cache.s3BucketName"     = element(regex("(\\S*${local.s3_bucket_fragments["cache"]}\\S*)", join(" ", values(aws_s3_bucket.bucket)[*].id)), 0)
+    "runners.cache.s3BucketLocation" = data.aws_region.current.name
+    "runners.cache.s3CacheInsecure"  = "false"
+    "runners.cache.secretName"       = kubernetes_secret.gitlab_runner_s3_access.metadata[0].name
+  }
+
   helm_gitlab_runner_toleration_sets = {
     "tolerations[0].key"                                                     = var.ci_k8s_toleration_label.0.key
     "tolerations[0].value"                                                   = var.ci_k8s_toleration_label.0.value
@@ -273,6 +285,14 @@ resource "helm_release" "gitlab" {
     for_each = var.use_internal_ingress ? local.helm_nginx_internal_sets : {}
     content {
       name  = set.key
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = local.helm_gitlab_runner_sets
+    content {
+      name  = "gitlab-runner.${set.key}"
       value = set.value
     }
   }
