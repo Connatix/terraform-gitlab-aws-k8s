@@ -12,7 +12,8 @@ locals {
     "cache"         = "cache"
   }
 
-  s3_buckets = toset(formatlist("%s-%s-%s", var.name, replace(var.domain, ".", "-"), values(local.s3_bucket_fragments)))
+  s3_buckets             = toset(formatlist("%s-%s-%s", var.name, replace(var.domain, ".", "-"), values(local.s3_bucket_fragments)))
+  s3_buckets_kms_disable = ["artifacts"]
 }
 
 resource "aws_s3_bucket" "bucket" {
@@ -20,10 +21,14 @@ resource "aws_s3_bucket" "bucket" {
 
   bucket_prefix = each.value
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "aws:kms"
+  dynamic "server_side_encryption_configuration" {
+    for_each = contains(local.s3_buckets_kms_disable, each.key) ? [""] : [each.value]
+
+    content {
+      rule {
+        apply_server_side_encryption_by_default {
+          sse_algorithm = "aws:kms"
+        }
       }
     }
   }
