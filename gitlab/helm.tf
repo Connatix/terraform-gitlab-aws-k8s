@@ -193,15 +193,20 @@ locals {
   }
 
   helm_gitlab_runner_sets = {
-    "runners.cache.cacheType"   = "s3"
-    "runners.cache.cachePath"   = "gitlab_runner"
-    "runners.cache.cacheShared" = "true"
+    "cache.cacheType"   = "s3"
+    "cache.cachePath"   = "gitlab_runner"
+    "cache.cacheShared" = "true"
 
-    "runners.cache.s3ServerAddress"  = "s3.amazonaws.com"
-    "runners.cache.s3BucketName"     = element(regex("(\\S*${local.s3_bucket_fragments["cache"]}\\S*)", join(" ", values(aws_s3_bucket.bucket)[*].id)), 0)
-    "runners.cache.s3BucketLocation" = data.aws_region.current.name
-    "runners.cache.s3CacheInsecure"  = "false"
-    "runners.cache.secretName"       = kubernetes_secret.gitlab_runner_s3_access.metadata[0].name
+    "cache.s3ServerAddress"  = "s3.amazonaws.com"
+    "cache.s3BucketName"     = element(regex("(\\S*${local.s3_bucket_fragments["cache"]}\\S*)", join(" ", values(aws_s3_bucket.bucket)[*].id)), 0)
+    "cache.s3BucketLocation" = data.aws_region.current.name
+    "cache.s3CacheInsecure"  = "false"
+    "cache.secretName"       = kubernetes_secret.gitlab_runner_s3_access.metadata[0].name
+
+    "builds.cpuLimit"       = "7"
+    "builds.memoryLimit"    = "14Gi"
+    "builds.cpuRequests"    = "5"
+    "builds.memoryRequests" = "8Gi"
   }
 
   helm_gitlab_runner_toleration_sets = {
@@ -292,7 +297,7 @@ resource "helm_release" "gitlab" {
   dynamic "set" {
     for_each = local.helm_gitlab_runner_sets
     content {
-      name  = "gitlab-runner.${set.key}"
+      name  = "gitlab-runner.runners.${set.key}"
       value = set.value
     }
   }
