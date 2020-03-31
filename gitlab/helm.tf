@@ -192,6 +192,27 @@ locals {
     "extraArgs" = local.use_external_postgres ? "--skip db" : ""
   }
 
+  helm_appconfig_cron_jobs_sets = {
+    "pipeline_schedule_worker" = "0 */5 * ? * *"
+  }
+
+  helm_gitlab_runner_sets = {
+    "cache.cacheType"   = "s3"
+    "cache.cachePath"   = "gitlab_runner"
+    "cache.cacheShared" = "true"
+
+    "cache.s3ServerAddress"  = "s3.amazonaws.com"
+    "cache.s3BucketName"     = element(regex("(\\S*${local.s3_bucket_fragments["cache"]}\\S*)", join(" ", values(aws_s3_bucket.bucket)[*].id)), 0)
+    "cache.s3BucketLocation" = data.aws_region.current.name
+    "cache.s3CacheInsecure"  = "false"
+    "cache.secretName"       = kubernetes_secret.gitlab_runner_s3_access.metadata[0].name
+
+    "builds.cpuLimit"       = var.gitlab_runner_build_resources.cpuLimit
+    "builds.memoryLimit"    = var.gitlab_runner_build_resources.memoryLimit
+    "builds.cpuRequests"    = var.gitlab_runner_build_resources.cpuRequests
+    "builds.memoryRequests" = var.gitlab_runner_build_resources.memoryRequests
+  }
+
   helm_gitlab_runner_toleration_sets = {
     "tolerations[0].key"                                                     = var.ci_k8s_toleration_label.0.key
     "tolerations[0].value"                                                   = var.ci_k8s_toleration_label.0.value
@@ -273,6 +294,14 @@ resource "helm_release" "gitlab" {
     for_each = var.use_internal_ingress ? local.helm_nginx_internal_sets : {}
     content {
       name  = set.key
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = local.helm_gitlab_runner_sets
+    content {
+      name  = "gitlab-runner.runners.${set.key}"
       value = set.value
     }
   }

@@ -9,9 +9,14 @@ locals {
     "tmp"           = "tmp"
     "externalDiffs" = "externaldiffs"
     "pseudonymizer" = "pseudonymizer"
+    "cache"         = "cache"
   }
 
   s3_buckets = toset(formatlist("%s-%s-%s", var.name, replace(var.domain, ".", "-"), values(local.s3_bucket_fragments)))
+  # Reason for disabling S3 KMS, see: https://gitlab.com/gitlab-org/gitlab-workhorse/issues/185
+  s3_bucket_kms_disable_override = [
+    formatlist("%s-%s-%s", var.name, replace(var.domain, ".", "-"), local.s3_bucket_fragments["artifacts"])[0]
+  ]
 }
 
 resource "aws_s3_bucket" "bucket" {
@@ -19,10 +24,15 @@ resource "aws_s3_bucket" "bucket" {
 
   bucket_prefix = each.value
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "aws:kms"
+  dynamic "server_side_encryption_configuration" {
+    for_each = contains(local.s3_bucket_kms_disable_override, each.key) ? [] : [each.value]
+    iterator = itsse
+
+    content {
+      rule {
+        apply_server_side_encryption_by_default {
+          sse_algorithm = "aws:kms"
+        }
       }
     }
   }

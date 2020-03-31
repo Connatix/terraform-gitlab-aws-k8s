@@ -98,3 +98,19 @@ variable "use_internal_ingress" {
   type    = bool
   default = false
 }
+
+variable "gitlab_runner_build_resources" {
+  type = object({
+    cpuLimit : string, // has to be string since it can contain "m"
+    memoryLimit : string,
+    cpuRequests : string,
+    memoryRequests : string
+  })
+  default = {
+    "cpuLimit"       = "8"
+    "memoryLimit"    = "16Gi"
+    "cpuRequests"    = "2"
+    "memoryRequests" = "4Gi"
+  }
+
+}
