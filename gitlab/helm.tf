@@ -192,6 +192,10 @@ locals {
     "extraArgs" = local.use_external_postgres ? "--skip db" : ""
   }
 
+  helm_appconfig_cron_jobs_sets = {
+    "pipeline_schedule_worker" = "0 */5 * ? * *"
+  }
+
   helm_gitlab_runner_sets = {
     "cache.cacheType"   = "s3"
     "cache.cachePath"   = "gitlab_runner"
