@@ -207,10 +207,10 @@ locals {
     "cache.s3CacheInsecure"  = "false"
     "cache.secretName"       = kubernetes_secret.gitlab_runner_s3_access.metadata[0].name
 
-    "builds.cpuLimit"       = "7"
-    "builds.memoryLimit"    = "14Gi"
-    "builds.cpuRequests"    = "5"
-    "builds.memoryRequests" = "8Gi"
+    "builds.cpuLimit"       = var.gitlab_runner_build_resources.cpuLimit
+    "builds.memoryLimit"    = var.gitlab_runner_build_resources.memoryLimit
+    "builds.cpuRequests"    = var.gitlab_runner_build_resources.cpuRequests
+    "builds.memoryRequests" = var.gitlab_runner_build_resources.memoryRequests
   }
 
   helm_gitlab_runner_toleration_sets = {
