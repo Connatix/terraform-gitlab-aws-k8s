@@ -1,7 +1,7 @@
 locals {
   templates_dir = "${path.module}/templates"
 
-  chart_version = "3.2.1"
+  chart_version = "3.2.2"
 
   postgres_version_full                         = "11.6"
   postgres_version_major                        = join(".", slice(split(".", local.postgres_version_full), 0, 1))

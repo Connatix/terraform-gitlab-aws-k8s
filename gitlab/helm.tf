@@ -193,7 +193,7 @@ locals {
   }
 
   helm_appconfig_cron_jobs_sets = {
-    "pipeline_schedule_worker" = "0 */5 * ? * *"
+    "pipeline_schedule_worker.cron" = "*/5 * * * *"
   }
 
   helm_gitlab_runner_sets = {
@@ -318,6 +318,14 @@ resource "helm_release" "gitlab" {
     for_each = length(var.smtp_config) > 0 ? local.helm_smtp_sets : {}
     content {
       name  = "global.smtp.${set.key}"
+      value = set.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = local.helm_appconfig_cron_jobs_sets
+    content {
+      name  = "global.appConfig.cron_jobs.${set.key}"
       value = set.value
     }
   }
